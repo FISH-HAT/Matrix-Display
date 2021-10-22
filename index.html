@@ -6,7 +6,7 @@
 <script>
 
     // set the dimensions and margins of the graph
-    var len = Math.min(window.innerWidth, window.innerHeight-52);
+    var len = Math.max(window.innerWidth, window.innerHeight) - 52;
     var margin = { top: 80, right: 50, bottom: 50, left: 80 },
         width = len - margin.left - margin.right,
         height = len - margin.top - margin.bottom;
@@ -35,7 +35,11 @@
             .style("font-size", 15)
             .attr("transform", "translate(0,-15)")
             .call(d3.axisBottom(x).tickSize(0))
-            .select(".domain").remove()
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("transform", "rotate(90)")
+        svg.select(".domain").remove()
+
 
         // Build Y scales and axis:
         var y = d3.scaleBand()
@@ -50,7 +54,7 @@
         // Build color scale
         var myColor = d3.scaleSequential()
             .interpolator(d3.interpolate("white", "black"))
-            .domain([0, 1])
+            .domain([0, 100])
 
         // create a tooltip
         var tooltip = d3.select("#vis")
@@ -73,7 +77,7 @@
         }
         var mousemove = function (d) {
             tooltip
-                .html("Correlation between " + d.group + " and " + d.variable + ": " + d.value)
+                .html("Correlation between " + d.group + " and " + d.variable + ": " + d.value + "%")
                 .style("left", (d3.mouse(this)[0] + 70) + "px")
                 .style("top", (d3.mouse(this)[1]) + "px")
         }
@@ -103,5 +107,6 @@
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave)
+
     })
 </script>
