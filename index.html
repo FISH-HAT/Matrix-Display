@@ -20,7 +20,7 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     //Read the data
-    d3.csv("/data/testmatrix.csv", function (data) {
+    d3.csv("https://raw.githubusercontent.com/FISH-HAT/Matrix-Display/main/testmatrix.csv", function (data) {
 
         // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
         var myGroups = d3.map(data, function (d) { return d.group; }).keys()
@@ -53,7 +53,7 @@
 
         // Build color scale
         var myColor = d3.scaleSequential()
-            .interpolator(d3.interpolate("white", "black"))
+            .interpolator(d3.interpolate("green", "red"))
             .domain([0, 100])
 
         // create a tooltip
@@ -88,6 +88,11 @@
                 .style("stroke", "none")
                 .style("opacity", 0.8)
         }
+        var mouseclick = function (d) {
+            sessionStorage.setItem("matrixdisplay-a", d.group)
+            sessionStorage.setItem("matrixdisplay-b", d.variable)
+            window.location.href = "./fileview.html"
+        }
 
         // add the squares
         svg.selectAll()
@@ -107,7 +112,7 @@
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave)
-            .on("click", mouseleave)
+            .on("click", mouseclick)
 
     })
 </script>

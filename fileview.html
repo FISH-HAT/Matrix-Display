@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v4.js"></script>
+<div id="vis"></div>
+<iframe id="frameA" scrolling="yes" height="500" width="500" src=""></iframe>
+<iframe id="frameB" scrolling="yes" height="500" width="500" src=""></iframe>
+<script>
+    wid = window.innerWidth-40;
+    hgt = window.innerHeight-30;
+
+    a = "./files/" + sessionStorage.getItem("matrixdisplay-a") + ".txt"
+    b = "./files/" + sessionStorage.getItem("matrixdisplay-b") + ".txt"
+
+
+    document.getElementById("frameA").src = a;
+    document.getElementById("frameA").height = hgt;
+    document.getElementById("frameA").width = wid/2;
+
+    document.getElementById("frameB").src = b;
+    document.getElementById("frameB").height = hgt;
+    document.getElementById("frameB").width = wid/2;
+
+
+</script>
