@@ -20,7 +20,8 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     //Read the data
-    d3.csv("https://raw.githubusercontent.com/FISH-HAT/Matrix-Display/main/testmatrix.csv", function (data) {
+    //d3.csv("./files/testmatrix.csv", function (data) { // this one doesnt work because chrome blocks loading csvs from disk
+    d3.csv("https://raw.githubusercontent.com/FISH-HAT/Matrix-Display/main/testmatrix.csv", function (data) { // this one requires the github link to work
 
         // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
         var myGroups = d3.map(data, function (d) { return d.group; }).keys()
@@ -91,7 +92,8 @@
         var mouseclick = function (d) {
             sessionStorage.setItem("matrixdisplay-a", d.group)
             sessionStorage.setItem("matrixdisplay-b", d.variable)
-            window.location.href = "./fileview.html"
+            var l = "./fileview.html?" + d.group + "|" + d.variable
+            window.location.href = l
         }
 
         // add the squares
