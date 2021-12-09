@@ -23,9 +23,49 @@
     //d3.csv("./files/testmatrix.csv", function (data) { // this one doesnt work because chrome blocks loading csvs from disk
     d3.csv("https://raw.githubusercontent.com/FISH-HAT/Matrix-Display/main/files/testmatrix.csv", function (data) { // this one requires the github link to work
 
+        // Build color scale
+        var arr = data.map(d => d.value)
+        var maxval = Math.max(...arr)
+        var minval = Math.min(...arr)
+        var myColor = d3.scaleSequential()
+            .interpolator(d3.interpolate("green", "red"))
+            .domain([minval, maxval])
+
+        // I'm sorry to whoever has to read this, this is just easier for me than figuring out how PHP works
+        var qs = location.search.substring(1)
+        var q = qs.split("&")
+        var qa = q[0].split("=")
+        var showAbove = qa[1]
+        var qb = q[1].split("=")
+        var showBelow = qb[1]
+
+        if (showAbove == "") { showAbove = 0 }
+        if (showBelow == "") { showBelow = 100000000 }
+
+        
+        console.log("a: " + showAbove + "\nb: " + showBelow)
+
+        if (Number(showAbove) > Number(showBelow)) {
+            tempdata = data.filter(function(row) {
+                return (row['value'] > Number(showAbove) || row['value'] < Number(showBelow)) && row['group'] != row['variable']
+            })
+        } else  if (Number(showAbove) < Number(showBelow)) {
+            tempdata = data.filter(function(row) {
+                return (row['value'] > Number(showAbove) && row['value'] < Number(showBelow)) && row['group'] != row['variable']
+            })
+        } else {
+            tempdata = data
+        }
+
+        var myGroups = d3.map(tempdata, function (d) { return d.group; }).keys()
+        var myVars = d3.map(tempdata, function (d) { return d.variable; }).keys()
+        data = data.filter(function(row) {
+            return myGroups.includes(row['group']) && myVars.includes(row['variable'])
+        })
+
         // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
-        var myGroups = d3.map(data, function (d) { return d.group; }).keys()
-        var myVars = d3.map(data, function (d) { return d.variable; }).keys()
+        myGroups = myGroups.sort()
+        myVars = myVars.sort()
 
         // Build X scales and axis:
         var x = d3.scaleBand()
@@ -51,15 +91,6 @@
             .style("font-size", 15)
             .call(d3.axisLeft(y).tickSize(0))
             .select(".domain").remove()
-
-        
-        // Build color scale
-        var arr = data.map(d => d.value)
-        var maxval = Math.max(...arr)
-        var minval = Math.min(...arr)
-        var myColor = d3.scaleSequential()
-            .interpolator(d3.interpolate("green", "red"))
-            .domain([minval, maxval])
 
         // create a tooltip
         var tooltip = d3.select("#vis")
@@ -94,9 +125,7 @@
                 .style("opacity", 0.8)
         }
         var mouseclick = function (d) {
-            sessionStorage.setItem("matrixdisplay-a", d.group)
-            sessionStorage.setItem("matrixdisplay-b", d.variable)
-            var l = "./fileview.html?" + d.group + "|" + d.variable
+            var l = "./fileview.html?" + d.group + "-" + d.variable
             window.location.href = l
         }
 

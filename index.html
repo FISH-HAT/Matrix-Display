@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v4.js"></script>
+<form action="./matrix.html">
+    <label for="sha">Show values above:</label>
+    <input type="text" id="sha" name="sha"><br><br>
+    <label for="shb">Show values below:</label>
+    <input type="text" id="shb" name="shb"><br><br>
+    <input type="submit" value="Filter matrix">
+</form><br>
+<button type="button" onclick="nofilter()">Show matrix without filtering</button>
+<script>
+    function nofilter() {
+        window.location.href = "./matrix.html?sha=0&shb=0"
+    }
+</script>
