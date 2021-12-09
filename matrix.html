@@ -52,10 +52,14 @@
             .call(d3.axisLeft(y).tickSize(0))
             .select(".domain").remove()
 
+        
         // Build color scale
+        var arr = data.map(d => d.value)
+        var maxval = Math.max(...arr)
+        var minval = Math.min(...arr)
         var myColor = d3.scaleSequential()
             .interpolator(d3.interpolate("green", "red"))
-            .domain([0, 100])
+            .domain([minval, maxval])
 
         // create a tooltip
         var tooltip = d3.select("#vis")
@@ -78,7 +82,7 @@
         }
         var mousemove = function (d) {
             tooltip
-                .html("Correlation between " + d.group + " and " + d.variable + ": " + d.value + "%")
+                .html("Correlation between " + d.group + " and " + d.variable + ": " + d.value)
                 .style("left", (d3.mouse(this)[0] + 70) + "px")
                 .style("top", (d3.mouse(this)[1]) + "px")
         }
